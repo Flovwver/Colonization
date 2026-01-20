@@ -1,24 +1,31 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UnitsCoordinator : MonoBehaviour
 {
+    private readonly HashSet<Coal> _occupiedTargets = new();
+
     [SerializeField] private List<Unit> _units;
 
     public void SendUnitsTo(List<Coal> targets)
     {
-        int targetIndex = 0;
-
-        foreach (Unit unit in _units)
+        foreach (Unit freeUnit in _units.Where(unit => unit.Status == UnitStatuses.Idle))
         {
-            if (unit.Status != UnitStatuses.Idle)
-                continue;
+            var freeTarget = targets.FirstOrDefault(target => _occupiedTargets.Contains(target) == false);
 
-            if (targetIndex >= targets.Count)
+            if (freeTarget == null) 
                 break;
 
-            unit.SetTarget(targets[targetIndex].transform);
-            targetIndex++;
+            freeUnit.SetTarget(freeTarget);
+            _occupiedTargets.Add(freeTarget);
+            freeTarget.OnRemoved += OnTargetRemoved;
         }
+    }
+
+    private void OnTargetRemoved(Coal target)
+    {
+        target.OnRemoved -= OnTargetRemoved;
+        _occupiedTargets.Remove(target);
     }
 }

@@ -1,66 +1,63 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Mover))]
-[RequireComponent(typeof(CoalSearcher))]
-[RequireComponent(typeof(CoalInteractor))]
+[RequireComponent(typeof(TargetVisitor))]
 public class Unit : MonoBehaviour
 {
-    [SerializeField] private UnitStatuses _status = UnitStatuses.Idle;
     [SerializeField] private float _distanceToTarget = 0.1f;
     [SerializeField] private Throne _throne;
 
-    private Transform _target;
+    private VisitableTarget _target;
 
     private Mover _mover;
-    private CoalSearcher _searcher;
-    private CoalInteractor _interactor;
+    private TargetVisitor _targetVisitor;
 
-    public UnitStatuses Status => _status;
+    public UnitStatuses Status => _target != null ? UnitStatuses.Busy : UnitStatuses.Idle;
 
     private void Awake()
     {
         _mover = GetComponent<Mover>();
-        _searcher = GetComponent<CoalSearcher>();
-        _interactor = GetComponent<CoalInteractor>();
+        _targetVisitor = GetComponent<TargetVisitor>();
     }
 
     private void FixedUpdate()
     {
-        if (_target != null)
-        {
-            _status = UnitStatuses.Busy;
-            _mover.GoToSpawner(_target.position);
+        if (_target == null)
+            return;
 
-            if(Vector3.Distance(transform.position, _target.position) < _distanceToTarget)
-            {
-                if (_interactor.HasCoal == false)
-                {
-                    var coal = _searcher.FindCoal();
+        _mover.MoveTo(_target.transform.position);
 
-                    if (coal != null)
-                    {
-                        _interactor.Take(coal);
+        if (IsCloseToTarget() == false)
+            return;
 
-                        _target = _throne.transform;
-                    }
-                    else
-                    {
-                        _target = null;
-                        _status = UnitStatuses.Idle;
-                    }
-                }
-                else 
-                {
-                    _interactor.GiveCoalTo(_throne);
-                    _status = UnitStatuses.Idle;
-                    _target = null;
-                }
-            }
-        }
+        _target.Accept(_targetVisitor);
+
+        ResolveNextTarget();
+
     }
 
-    public void SetTarget(Transform target)
+    public void SetTarget(VisitableTarget target)
     {
         _target = target;
+    }
+
+    private bool IsCloseToTarget()
+    {
+        if (_target == null)
+            return false;
+
+        return Vector3.Distance(transform.position, _target.transform.position) < _distanceToTarget;
+    }
+
+    private void ResolveNextTarget()
+    {
+        if (_target is Coal)
+        {
+            SetTarget(_throne);
+        }
+        else
+        {
+            SetTarget(null);
+        }
     }
 }

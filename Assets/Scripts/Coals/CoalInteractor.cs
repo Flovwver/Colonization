@@ -5,16 +5,16 @@ public class CoalInteractor : MonoBehaviour
     [SerializeField] private Vector3 _holdPoint;
     [SerializeField] private LayerMask _layerMask;
 
-    private Coal _takedCoal = null;
+    [SerializeField] private Coal _takedCoal = null;
 
     public bool HasCoal => _takedCoal != null;
 
     public void Take(Coal coal)
     {
-        if (coal == null || coal.IsTook) 
+        if (coal == null) 
             return;
 
-        coal.OnTook();
+        coal.TurnOnKinematic();
         coal.transform.SetParent(transform, true);
         coal.transform.localPosition = _holdPoint;
         _takedCoal = coal;

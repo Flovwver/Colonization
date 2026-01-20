@@ -11,7 +11,7 @@ public class Mover : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    public void GoToSpawner(Vector3 spawnerPosition)
+    public void MoveTo(Vector3 spawnerPosition)
     {
         _rigidbody.MovePosition(Vector3.MoveTowards(transform.position, spawnerPosition, _speed * Time.fixedDeltaTime));
     }

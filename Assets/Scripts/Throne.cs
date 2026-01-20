@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(CoalSearcher))]
 [RequireComponent(typeof(CoalStorage))]
 [RequireComponent(typeof(UnitsCoordinator))]
-public class Throne : MonoBehaviour
+public class Throne : VisitableTarget
 {
     [SerializeField] private bool _isSearch = true;
     [SerializeField] private float _searchDelay = 3.0f;
@@ -24,6 +24,8 @@ public class Throne : MonoBehaviour
     {
         StartCoroutine(RunSearch());
     }
+
+    public override void Accept(TargetVisitor visitor) => visitor.Visit(this);
 
     public void TakeCoal(Coal coal)
     {

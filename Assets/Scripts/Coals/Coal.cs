@@ -2,13 +2,11 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Coal : MonoBehaviour
+public class Coal : VisitableTarget
 {
     private Rigidbody _rigidbody;
 
     public event Action<Coal> OnRemoved;
-
-    public bool IsTook { get; private set; } = false;
 
     private void Awake()
     {
@@ -18,19 +16,19 @@ public class Coal : MonoBehaviour
     public void Remove()
     {
         transform.SetParent(null, true);
-        IsTook = false;
 
         OnRemoved?.Invoke(this);
     }
 
-    public void OnInitialize()
+    public void TurnOffKinematic()
     {
         _rigidbody.isKinematic = false;
     }
 
-    public void OnTook()
+    public void TurnOnKinematic()
     {
-        IsTook = true;
         _rigidbody.isKinematic = true;
     }
+
+    public override void Accept(TargetVisitor visitor) => visitor.Visit(this);
 }

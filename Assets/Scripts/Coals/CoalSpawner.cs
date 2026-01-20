@@ -28,7 +28,7 @@ public class CoalSpawner : MonoBehaviour
 
         var coal = _pool.Get();
         coal.transform.position = transform.position;
-        coal.OnInitialize();
+        coal.TurnOffKinematic();
         coal.OnRemoved += RemoveCoal;
     }
 
