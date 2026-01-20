@@ -5112,6 +5112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 740481b0dff091644be0ead91677e0ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _storage: {fileID: 425290441}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -5653,7 +5654,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d524775c15872de46b9a3e5fedcce893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coalStorageUI: {fileID: 227976559}
 --- !u!114 &425290442
 MonoBehaviour:
   m_ObjectHideFlags: 0
