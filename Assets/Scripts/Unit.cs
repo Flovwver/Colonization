@@ -33,12 +33,16 @@ public class Unit : MonoBehaviour
         _target.Accept(_targetVisitor);
 
         ResolveNextTarget();
-
     }
 
     public void SetTarget(VisitableTarget target)
     {
         _target = target;
+    }
+
+    public void SetThrone(Throne throne)
+    {
+        _throne = throne;
     }
 
     private bool IsCloseToTarget()

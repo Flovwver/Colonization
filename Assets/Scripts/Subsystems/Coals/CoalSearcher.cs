@@ -7,6 +7,7 @@ public class CoalSearcher : MonoBehaviour
 
     [SerializeField] private float _searchRadius = 10f;
     [SerializeField] private LayerMask _coalLayerMask;
+    [SerializeField] private CoalOccupationRegistry _coalOccupationRegistry;
 
     public List<Coal> FindAllCoals()
     {
@@ -16,11 +17,17 @@ public class CoalSearcher : MonoBehaviour
 
         for (int i = 0; i < hitsCount; i++)
         {
-            if (_hits[i].TryGetComponent(out Coal coal))
+            if (_hits[i].TryGetComponent(out Coal coal) &&
+                _coalOccupationRegistry.IsOccupied(coal) == false)
             {
                 coals.Add(coal);
             }
         }
+
+        coals.Sort((a, b) =>
+            Vector3.Distance(transform.position, a.transform.position)
+            .CompareTo(Vector3.Distance(transform.position, b.transform.position))
+        );
 
         return coals;
     }

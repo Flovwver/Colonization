@@ -4,6 +4,7 @@ using UnityEngine;
 public class TargetVisitor : MonoBehaviour
 {
     private CoalInteractor _interactor;
+
     private void Awake()
     {
         _interactor = GetComponent<CoalInteractor>();
@@ -16,6 +17,11 @@ public class TargetVisitor : MonoBehaviour
 
     public void Visit(Throne throne)
     {
-        _interactor.GiveCoalTo(throne);
+        _interactor.GiveAllCoalsTo(throne);
+    }
+
+    public void Visit(Flag flag)
+    {
+        
     }
 }

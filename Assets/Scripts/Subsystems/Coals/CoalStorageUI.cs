@@ -3,7 +3,7 @@ using TMPro;
 
 public class CoalStorageUI : MonoBehaviour
 {
-    [SerializeField] private CoalStorage _storage;
+    [SerializeField] private ThroneCoalStorage _storage;
 
     private TMP_Text _text;
 
