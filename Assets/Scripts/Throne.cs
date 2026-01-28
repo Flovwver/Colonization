@@ -1,29 +1,76 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(CoalSearcher))]
-[RequireComponent(typeof(ThroneCoalStorage))]
-[RequireComponent(typeof(ThroneUnitsCoordinator))]
+[RequireComponent(typeof(CoalStorage))]
+[RequireComponent(typeof(UnitsCoordinator))]
+[RequireComponent(typeof(UnitCreator))]
+[RequireComponent(typeof(CoalSpawner))]
 public class Throne : VisitableTarget
 {
-    [SerializeField] private bool _isSearch = true;
     [SerializeField] private float _searchDelay = 3.0f;
+    
+    private bool _isSelected = false;
 
     private CoalSearcher _coalSearcher;
-    private ThroneCoalStorage _storage;
-    private ThroneUnitsCoordinator _unitsCoordinator;
+    private CoalStorage _storage;
+    private UnitsCoordinator _unitsCoordinator;
+    private UnitCreator _unitCreator;
+    private CoalSpawner _coalSpawner;
+
+    private UnitProductionService _productionService;
+    private ThroneExpansionService _expansionService;
+    private ResourceSearchService _searchService;
+    private ThroneProductionCoordinator _throneProductionCoordinator;
+
+    public event Action<bool> OnSelected;
 
     private void Awake()
     {
         _coalSearcher = GetComponent<CoalSearcher>();
-        _storage = GetComponent<ThroneCoalStorage>();
-        _unitsCoordinator = GetComponent<ThroneUnitsCoordinator>();
+        _storage = GetComponent<CoalStorage>();
+        _unitsCoordinator = GetComponent<UnitsCoordinator>();
+        _unitCreator = GetComponent<UnitCreator>();
+        _coalSpawner = GetComponent<CoalSpawner>();
+
+        _productionService = new (
+            _storage,
+            _unitCreator,
+            _unitsCoordinator,
+            this
+        );
+
+        _expansionService = new (
+            _storage,
+            _unitsCoordinator,
+            _coalSpawner
+        );
+
+        _searchService = new (
+            _coalSearcher,
+            _unitsCoordinator,
+            _searchDelay
+        );
+
+        _throneProductionCoordinator = new (
+            _productionService, 
+            _expansionService
+        );
     }
 
     private void Start()
     {
-        StartCoroutine(RunSearch());
+        StartCoroutine(_searchService.RunSearch());
+    }
+
+    private void OnEnable()
+    {
+        _storage.StoredCoalCountChanged += _throneProductionCoordinator.OnStoredCoalCountChanged;
+    }
+
+    private void OnDisable()
+    {
+        _storage.StoredCoalCountChanged -= _throneProductionCoordinator.OnStoredCoalCountChanged;
     }
 
     public override void Accept(TargetVisitor visitor) => visitor.Visit(this);
@@ -35,20 +82,23 @@ public class Throne : VisitableTarget
 
     public void SendUnitToBuild(Flag flag)
     {
-        
+        _throneProductionCoordinator.RequestThroneExpansion(flag);
     }
 
-    private IEnumerator RunSearch()
+    public void Register(Unit unit)
     {
-        var wait = new WaitForSeconds(_searchDelay);
+        _unitsCoordinator.RegisterUnit(unit);
+    }
 
-        while (_isSearch)
-        {
-            yield return wait;
+    public void SetSelected(bool isSelected)
+    { 
+        _isSelected = isSelected;
+        OnSelected?.Invoke(_isSelected);
+    }
 
-            var findedCoals = _coalSearcher.FindAllCoals();
-
-            _unitsCoordinator.SendUnitsTo(findedCoals);
-        }
+    public void SetCoalOccupationRegistry(CoalOccupationRegistry coalOccupationRegistry)
+    {
+        _unitsCoordinator.SetCoalOccupationRegistry(coalOccupationRegistry);
+        _coalSearcher.SetCoalOccupationRegistry(coalOccupationRegistry);
     }
 }

@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: 6190229855109225956}
   - component: {fileID: 6983546149180971678}
   - component: {fileID: 8353492337055498273}
-  - component: {fileID: 3182886425472738086}
   - component: {fileID: 130037370720407900}
   - component: {fileID: 5339762257730666765}
+  - component: {fileID: 4923547707269431453}
+  - component: {fileID: 1101767563966264910}
   m_Layer: 0
   m_Name: Unit
   m_TagString: Untagged
@@ -155,22 +156,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 5
---- !u!114 &3182886425472738086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1669492001831238060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4917a031f4234b242813eb217dd19db7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _searchRadius: 2
-  _coalLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
 --- !u!114 &130037370720407900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,9 +169,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _holdPoint: {x: 0, y: 3, z: 0}
-  _layerMask:
-    serializedVersion: 2
-    m_Bits: 1
+  _coalsCapacity: 5
+  _takedCoals: []
 --- !u!114 &5339762257730666765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,6 +183,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd5b295162d89e4f8dd7e2f97f375aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _status: 0
   _distanceToTarget: 2
   _throne: {fileID: 0}
+--- !u!114 &4923547707269431453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1669492001831238060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 594e7feb17844af4fb192218de0f4597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1101767563966264910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1669492001831238060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b49c5511d577994fb4f610f73a3d3f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 7704761174685560618, guid: a6be0896a6c8bf74084f0fc39da3cdf5, type: 3}
+  _cost: 5

@@ -9,6 +9,8 @@ public class CoalInteractor : MonoBehaviour
 
     public bool HasCoal => _takedCoals.Count > 0;
 
+    public int CoalCount => _takedCoals.Count;
+
     public void Take(Coal coal)
     {
         if (coal == null || _takedCoals.Count >= _coalsCapacity) 
@@ -29,8 +31,16 @@ public class CoalInteractor : MonoBehaviour
         {
             coal.transform.SetParent(null, true);
             throne.TakeCoal(coal);
-
-            _takedCoals.Remove(coal);
         }
+
+        _takedCoals.Clear();
+    }
+
+    public void RemoveAllCoals()
+    {
+        foreach (var coal in _takedCoals)
+            coal.Remove();
+
+        _takedCoals.Clear();
     }
 }

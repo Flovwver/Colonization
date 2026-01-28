@@ -21,15 +21,16 @@ public class CoalSpawner : MonoBehaviour
         );
     }
 
-    public void Spawn()
+    public Coal Spawn()
     {
         if (CanSpawn() == false)
-            return;
+            return null;
 
         var coal = _pool.Get();
         coal.transform.position = transform.position;
         coal.TurnOffKinematic();
         coal.OnRemoved += RemoveCoal;
+        return coal;
     }
 
     public bool CanSpawn()

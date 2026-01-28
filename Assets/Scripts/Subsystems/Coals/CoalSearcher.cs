@@ -31,4 +31,9 @@ public class CoalSearcher : MonoBehaviour
 
         return coals;
     }
+
+    public void SetCoalOccupationRegistry(CoalOccupationRegistry occupationRegistry)
+    {
+        _coalOccupationRegistry = occupationRegistry;
+    }
 }

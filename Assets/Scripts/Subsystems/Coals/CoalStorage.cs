@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ThroneCoalStorage : MonoBehaviour
+public class CoalStorage : MonoBehaviour
 {
     public int StoredCoalCount { get; private set; } = 0;
 
@@ -20,7 +20,7 @@ public class ThroneCoalStorage : MonoBehaviour
         if (StoredCoalCount < amount)
             return 0;
 
-        int coalGiven = StoredCoalCount;
+        int coalGiven = amount;
         StoredCoalCount -= coalGiven;
         StoredCoalCountChanged?.Invoke(StoredCoalCount);
         return coalGiven;

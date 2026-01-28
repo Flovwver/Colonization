@@ -5,6 +5,7 @@ public class ConstructionForeman : MonoBehaviour
     [SerializeField] private MouseRaycastSelector _mouseRaycastSelector;
     [SerializeField] private Flag _flagPrefab;
 
+    private Flag _flagInstance;
     private Throne _selectedThrone;
 
     private void OnEnable()
@@ -23,11 +24,14 @@ public class ConstructionForeman : MonoBehaviour
     {
         if (_selectedThrone != null)
         {
-            //_selectedThrone.SetSelected(false);
+            _selectedThrone.SetSelected(false);
         }
 
         _selectedThrone = throne;
-        //_selectedThrone.SetSelected(true);
+        _selectedThrone.SetSelected(true);
+
+        if (_flagInstance != null)
+            Destroy(_flagInstance.gameObject);
     }
 
     private void OnGroundClicked(Vector3 position)
@@ -37,8 +41,14 @@ public class ConstructionForeman : MonoBehaviour
             return;
         }
 
-        var flag = Instantiate(_flagPrefab, position, Quaternion.identity);
-
-        _selectedThrone.SendUnitToBuild(flag);
+        if (_flagInstance == null)
+        {
+            _flagInstance = Instantiate(_flagPrefab, position, Quaternion.identity);
+            _selectedThrone.SendUnitToBuild(_flagInstance);
+        }
+        else
+        {
+            _flagInstance.transform.position = position;
+        }
     }
 }

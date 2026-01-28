@@ -2,14 +2,29 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ThroneUnitsCoordinator : MonoBehaviour
+public class UnitsCoordinator : MonoBehaviour
 {
     [SerializeField] private List<Unit> _units;
     [SerializeField] private CoalOccupationRegistry _coalOccupationRegistry;
+    [SerializeField] private int _minUnitsCount = 1;
+
+    public int UnitsCount => _units.Count;
+
+    public CoalOccupationRegistry GetCoalOccupationRegistry() => _coalOccupationRegistry;
+
+    public void SetCoalOccupationRegistry(CoalOccupationRegistry coalOccupationRegistry)
+    {
+        _coalOccupationRegistry = coalOccupationRegistry;
+    }
 
     public void RegisterUnit(Unit unit)
     {
         _units.Add(unit);
+    }
+
+    public void UnregisterUnit(Unit unit)
+    {
+        _units.Remove(unit);
     }
 
     public void SendUnitsTo(List<Coal> targets)
@@ -28,15 +43,17 @@ public class ThroneUnitsCoordinator : MonoBehaviour
         }
     }
 
-    public bool TrySendUnitTo(Flag target)
+    public Unit SendUnitTo(Flag target)
     {
+        if (_units.Count <= _minUnitsCount)
+            return null;
+
         var unit = _units.FirstOrDefault(u => u.Status == UnitStatuses.Idle);
 
-        if (unit == null)
-            return false;
+        if (unit != null)
+            unit.SetTarget(target);
 
-        unit.SetTarget(target);
-        return true;
+        return unit;
     }
 
     private Coal FindFreeTarget(List<Coal> targets)
